@@ -25,7 +25,7 @@ jobs:
             unzip ".backup/$name.zip" -d . || echo "⚠️ No backup to restore."
           fi
      
-      - name: 🗂 Start tmate session
+     - name: 🗂 Start tmate session
        run: |
          echo "🖨 Launching tmate..."
          sudo apt install -y tmate
@@ -35,19 +35,19 @@ jobs:
          echo "$SSH" > "links/${{ github.event.client_payload.vps_name }}.txt"
          echo "✔ SSH Ready: $SSH"
          sleep 60  # give time for GitHub to sync
-      
-      - name: 📦 Save backup
-        run: |
-         name="${{ github.event.client_payload.vps_name }}"
-         zip -r ".backup/$name.zip" . -x ".git/*" ".github/*" ".backup/*" || true
+     
+    - name: 📦 Save backup
+      run: |
+        name="${{ github.event.client_payload.vps_name }}"
+        zip -r ".backup/$name.zip" . -x ".git/*" ".github/*" ".backup/*" || true
 
-      - name: 📤 Push
-       uses: stefanzweifel/git-auto-commit-action@v5
-       with:
-         commit_message: "🔄 Updated SSH + backup for ${{ github.event.client_payload.vps_name }}"
-         file_pattern: 'links/*.txt .backup/*.zip'
+    - name: 📤 Push
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "🔄 Updated SSH + backup for ${{ github.event.client_payload.vps_name }}"
+        file_pattern: 'links/*.txt .backup/*.zip'
 
-      - name: ⏳ Keep session alive
-       run: |
-         echo "⏳ Keeping session alive for 6 hours..."
-         sleep $((360 * 60))
+    - name: ⏳ Keep session alive
+      run: |
+        echo "⏳ Keeping session alive for 6 hours..."
+        sleep $((360 * 60))
